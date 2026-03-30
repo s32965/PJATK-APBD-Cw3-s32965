@@ -373,7 +373,7 @@ public sealed class ZadaniaLinq
                 (p, z) => new { p.Nazwa, z.OcenaKoncowa }
             )
             .GroupBy(e => e.Nazwa)
-            .Where(g => !g.Any(e => e.OcenaKoncowa.HasValue))
+            .Where(g => !g.Any(g => g.OcenaKoncowa.HasValue))
             .Select(g => $"{g.Key}");
         // throw Niezaimplementowano(nameof(Wyzwanie02_PrzedmiotyStartujaceWKwietniuBezOcenKoncowych));
     }
@@ -393,7 +393,23 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie03_ProwadzacyISredniaOcenNaIchPrzedmiotach()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie03_ProwadzacyISredniaOcenNaIchPrzedmiotach));
+        return DaneUczelni.Prowadzacy
+            .Join(
+                    DaneUczelni.Przedmioty, 
+                    pr => pr.Id, 
+                    p => p.ProwadzacyId, 
+                    (pr, p) => new {pr.Imie, pr.Nazwisko, p.Id}
+            )
+            .Join(
+                    DaneUczelni.Zapisy, 
+                    p => p.Id, 
+                    z => z.PrzedmiotId, 
+                    (p, z) => new {p.Imie, p.Nazwisko, z.OcenaKoncowa}
+            )
+            .Where(e => e.OcenaKoncowa.HasValue)
+            .GroupBy(e => (e.Imie, e.Nazwisko))
+            .Select(g => $"{g.Key.Imie} | {g.Key.Nazwisko} | {g.Average(e => e.OcenaKoncowa)}");
+        // throw Niezaimplementowano(nameof(Wyzwanie03_ProwadzacyISredniaOcenNaIchPrzedmiotach));
     }
 
     /// <summary>
@@ -411,7 +427,18 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie04_MiastaILiczbaAktywnychZapisow()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie04_MiastaILiczbaAktywnychZapisow));
+        return DaneUczelni.Studenci
+            .Join(
+                DaneUczelni.Zapisy,
+                s => s.Id,
+                z => z.StudentId,
+                (s, z) => new { s.Miasto, z.CzyAktywny }
+            )
+            .Where(e => e.CzyAktywny == true)
+            .GroupBy(e => e.Miasto)
+            .OrderByDescending(g => g.Count())
+            .Select(g => $"{g.Key} | {g.Count()}");
+        // throw Niezaimplementowano(nameof(Wyzwanie04_MiastaILiczbaAktywnychZapisow));
     }
 
     private static NotImplementedException Niezaimplementowano(string nazwaMetody)
