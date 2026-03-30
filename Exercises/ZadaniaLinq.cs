@@ -18,7 +18,7 @@ public sealed class ZadaniaLinq
     public IEnumerable<string> Zadanie01_StudenciZWarszawy()
     {
         return DaneUczelni.Studenci.Where(s => s.Miasto == "Warsaw").Select(s => $"{s.NumerIndeksu} | {s.Imie} | {s.Nazwisko} | {s.Miasto}");
-        /// throw Niezaimplementowano(nameof(Zadanie01_StudenciZWarszawy));
+        // throw Niezaimplementowano(nameof(Zadanie01_StudenciZWarszawy));
     }
 
     /// <summary>
@@ -32,7 +32,8 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie02_AdresyEmailStudentow()
     {
-        throw Niezaimplementowano(nameof(Zadanie02_AdresyEmailStudentow));
+        return DaneUczelni.Studenci.Select(s => $"{s.Email}");
+        // throw Niezaimplementowano(nameof(Zadanie02_AdresyEmailStudentow));
     }
 
     /// <summary>
